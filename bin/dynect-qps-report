@@ -73,6 +73,9 @@ class DynECTQPSReport < Clamp::Command
   option ['-p', '--password'], "PASSWORD",
     "the password to use for authentication with the DynECT API",
     :default => ENV['DYNECT_PASSWORD']
+  option ['-b', '--breakdown'], "BREAKDOWN",
+    "aggregation field. May be 'hosts', 'rrecs', or 'zones'",
+    :default => 'hosts'
   option ['-s', '--start-time'], "START_TIME",
     "start time of the report",
     :default => (ENV['START_TIME'] or Chronic.parse('one day ago')),
@@ -108,7 +111,7 @@ class DynECTQPSReport < Clamp::Command
     params = {
       :start_ts => start_time.to_i,
       :end_ts => end_time.to_i,
-      :breakdown => "hosts",
+      :breakdown => breakdown,
       :zones => zone_list
     }
     Scrolls.log(
